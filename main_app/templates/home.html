@@ -1,0 +1,77 @@
+home.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Search</title>
+</head>
+<body>
+    <h1>Spotify Search</h1>
+
+    <form method="post" action="{% url 'home' %}">
+        {% csrf_token %}
+        <label for="artist_query">Search for an artist:</label>
+        <input type="text" name="artist_query" required>
+        <button type="submit">Search</button>
+    </form>
+
+    <form method="post" action="{% url 'home' %}">
+        {% csrf_token %}
+        <label for="track_query">Search for a track:</label>
+        <input type="text" name="track_query" required>
+        <button type="submit">Search</button>
+    </form>
+
+    {% if songs %}
+        <h2>Top Tracks by {{ artist_name }}</h2>
+        <form method="post" action="{% url 'process_song_selection' %}">
+            {% csrf_token %}
+            <ul>
+                {% for song in songs.top_tracks %}
+                    <li>
+                        <input type="checkbox" name="selected_songs" value="{{ song.spotify_id }}">
+                        {{ song.name }} - 
+                        {{ song.album.name }} - 
+                        {% for artist in song.artists %}
+                            {{ artist.name }}
+                            {% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </li>
+                {% endfor %}
+            </ul>
+            <button type="submit">Save Selected Songs</button>
+        </form>
+
+        <h2>Albums by {{ artist_name }}</h2>
+        <ul>
+            {% for album in songs.albums %}
+                <li>{{ album.name }} - {{ album.artist.name }}
+                    <ul>
+                        {% for track in album.tracks %}
+                            <li>{{ track }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <h2>Related Artists to {{ artist_name }}</h2>
+        <ul>
+            {% for related_artist in songs.related_artists %}
+                <li>{{ related_artist.name }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if tracks %}
+        <h2>Track Information</h2>
+        <ul>
+            {% for track in tracks %}
+                <li>{{ track.name }} by {{ track.artists.0.name }} from the album {{ track.album.name }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>
