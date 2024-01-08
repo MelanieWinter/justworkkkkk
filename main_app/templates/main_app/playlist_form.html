@@ -4,22 +4,6 @@
         <div class="page-container-home">
             <form action="" method="POST" class="playlist-form" id="playlist-form">
                 {% csrf_token %}
-        
-
-
-                <!-- basic form here -->
-        
-                <form action="" method="post">
-                    <!-- Django requires the following for security purposes -->
-                    {% csrf_token %}
-                    <table>
-                        <!-- Render the inputs inside of <tr>s & <td>s -->
-                        {{ form.as_table }}
-                    </table>
-                    <input type="submit" value="Submit!" class="btn">
-                </form>
-        
-
 
 
         <!-- form in our melodix app at the moment -->
@@ -143,5 +127,6 @@
         </script>
         
     </body>
+
 </html>
 
