@@ -58,8 +58,12 @@
         <h2>Related Artists to {{ artist_name }}</h2>
         <ul>
             {% for related_artist in songs.related_artists %}
-                <li>{{ related_artist.name }}</li>
-            {% endfor %}
+            <li>
+                <a href="#" onclick="searchForArtist('{{ related_artist.name }}')">
+                    {{ related_artist.name }}
+                </a>
+            </li>
+        {% endfor %}
         </ul>
     {% endif %}
 
@@ -71,5 +75,32 @@
             {% endfor %}
         </ul>
     {% endif %}
+
+    <script>
+        function searchForArtist(artistName) {
+            var form = document.createElement('form');
+            form.method = 'post';
+            form.action = "{% url 'home' %}";
+    
+            var csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+    
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'artist_query';
+            input.value = artistName;
+    
+            form.appendChild(input);
+    
+            var csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrfmiddlewaretoken';
+            csrfInput.value = csrfToken;
+    
+            form.appendChild(csrfInput);
+    
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
 </body>
 </html>
