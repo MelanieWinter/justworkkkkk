@@ -1,0 +1,129 @@
+<html>
+    <body>
+        
+        <div class="page-container-home">
+            <form action="" method="POST" class="playlist-form" id="playlist-form">
+                {% csrf_token %}
+
+        <!-- form in our melodix app at the moment -->
+                <div class="detail-things">
+                    <div class="playlist-cover one">
+                        <div class="form-playlist-cover">
+                            {% if playlist.photo_set.all %}
+                                <img src="{{ playlist.photo_set.last.url }}">
+                            {% else %}
+                                <i class="fa-solid fa-compact-disc"></i>
+                            {% endif %}
+                        </div>
+                    </div>
+        
+                    <div class="detail-things-2">
+                        <div class="user-title-photo">
+                            <div class="playlist-form-name">
+                                {{ form.name }}
+                                <i class="fa-solid fa-pencil"></i>
+                            </div>
+                        </div>
+                        <div class="playlist-form-description">
+                            {{ form.description }}
+                            <i class="fa-solid fa-pencil"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-main">
+                    <div class="detail-menu">
+                        <div>
+                            <input type="submit" value="Submit!">
+                        </div>
+                    </div>
+                    {% if object %}
+                        <div class="songs-table-div">
+                            <table class="songs-table">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Title</th>
+                                    <th>Album</th>
+                                    <th>Date Added</th>
+                                    <th><i class="fa-regular fa-clock"></i></th>
+                                </tr>
+                                <tr class="no-padding">
+                                    <td colspan="5" class="no-padding">
+                                        <hr>
+                                    </td>
+                                </tr>
+                                {% if playlist.songs.count %}
+                                {% for song in playlist.songs.all %}
+                                <tr class="song-hover">
+                                    <td  data-cell="#">{{ forloop.counter }}</td>
+                                    <td data-cell="Title">
+                                        <div class="detail-each-song">
+                                            <div class="song-cover">
+                                                <i class="fa-solid fa-icons"></i>
+                                            </div>
+                                            <div class="detail-nameartist">
+                                                <div class="detail-song-name">
+                                                    {{ song.name }}
+                                                </div>
+                                                <div class="detail-song-artist">
+                                                    {{ song.artist }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td data-cell="Album">{{ song.album }}</td>
+                                    <td data-cell="Date Added">Date Added</td>
+                                    <td data-cell="Length">0:00</td>
+                                </tr>
+                                {% endfor %}
+                                {% endif %}
+                            </table>
+                        </div>
+                    {% endif %}
+                    <div class="playlist-songs-div">
+                        {% for song in songs %}
+                        <div class="one-song-playlist">
+                            <div class="detail-each-song">
+                                <div class="song-cover">
+                                    <i class="fa-solid fa-icons"></i>
+                                </div>
+                                <div class="detail-nameartist">
+                                    <div class="detail-song-name">
+                                        {{ song.name }}
+                                    </div>
+                                    <div class="detail-song-artist">
+                                        {{ song.artist}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <input type="checkbox" name="songs" value="{{ song.id }}" id="id_songs_{{ song.id }}" class="custom-input hidden">
+                                <label for="id_songs_{{ song.id }}" class="custom-checkbox">
+                                    <div>
+                                        Add
+                                    </div>  
+                                </label>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <script>
+            const playlistSongs = [{% for song in playlist.songs.all %}{{ song.id }},{% endfor %}];
+        
+            document.addEventListener('DOMContentLoaded', function() {
+                var checkboxes = document.querySelectorAll('.playlist-songs-div input[type="checkbox"]');
+                checkboxes.forEach(function(checkbox) {
+                    var songId = checkbox.value;
+                    if (playlistSongs.includes(parseInt(songId))) {
+                        checkbox.checked = true;
+                    }
+                });
+            });
+        
+        </script>
+        
+    </body>
+</html>
