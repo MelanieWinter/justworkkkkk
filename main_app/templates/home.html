@@ -8,6 +8,11 @@
 <body>
     <h1>Spotify Search</h1>
 
+    <a href="{% url 'playlists_create' %}">
+        <button>Create Playlist</button>
+    </a>
+    <br> <br>
+
     <form method="post" action="{% url 'home' %}">
         {% csrf_token %}
         <label for="artist_query">Search for an artist:</label>

@@ -28,7 +28,7 @@ class Playlist(models.Model):
         return f'{self.name} ({self.id})'
 
     def get_absolute_url(self):
-        return reverse('detail', kwargs={'playlist_id': self.id})
+        return reverse('home')
 
 class Photo(models.Model):
     url = models.CharField(max_length=200)

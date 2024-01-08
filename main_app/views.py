@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.views.generic.edit import CreateView
 from .spotify import get_spotify_data
 from django.db import models
-from .forms import SongSelectionForm
-from .models import Song
+from .forms import SongSelectionForm, PlaylistForm
+from .models import Song, Playlist
 
 
 def home(request):
@@ -29,5 +30,18 @@ def process_song_selection(request):
         Song.objects.filter(spotify_id__in=selected_song_ids).update(selected=True)
         return render(request, 'home.html', {})
 
+class PlaylistCreate(CreateView):
+    model = Playlist
+    fields = ['name', 'description', 'songs']
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        result = super().form_valid(form)
+        return result
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['songs'] = Song.objects.all()
+        context['playlist_form'] = PlaylistForm()
+        return context
 
